@@ -1,16 +1,20 @@
 package main
 
 import (
-    "fmt"
-    "net/http"
+	"fmt"
+	"net/http"
 )
 
 func main() {
-    http.HandleFunc("/", HelloServer)
-    http.ListenAndServe(":8080", nil)
+	http.HandleFunc("/hello", helloHandler)
+	http.ListenAndServe(":8080", nil)
 }
 
-func HelloServer(w http.ResponseWriter, r *http.Request) {
-    fmt.Fprintf(w, "Hello, %s!", r.URL.Path[1:])
+func helloHandler(w http.ResponseWriter, r *http.Request) {
+	user, ok := r.URL.Query()["user"]
+	if ok {
+		fmt.Fprintf(w, "Hello, %s!", user[0])
+	} else {
+		fmt.Fprintf(w, "Hello, world!")
+	}
 }
-
